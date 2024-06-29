@@ -3,6 +3,7 @@ MODULES = src
 INCLUDE = include
 BUILD = build
 BIN = bin
+FILES = files
 
 # compiler
 CC = g++
@@ -17,7 +18,7 @@ OBJS = $(BUILD)/MySort.o $(BUILD)/RecordReader.o
 EXEC = $(BIN)/MySort
 
 # Παράμετροι για δοκιμαστική εκτέλεση
-ARGS =  -i voters100000.bin -k 4 -e1 $(BIN)/QuickSort -e2 $(BIN)/MergeSort
+ARGS =  -i $(FILES)/voters100000.bin -k 4 -e1 $(BIN)/QuickSort -e2 $(BIN)/MergeSort
 
 # Default target
 all: $(EXEC) $(BIN)/QuickSort $(BIN)/MergeSort
