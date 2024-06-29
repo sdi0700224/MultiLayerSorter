@@ -1,33 +1,53 @@
-#paths
-MODULES = 
-INCLUDE = 
+# paths
+MODULES = src
+INCLUDE = include
+BUILD = build
+BIN = bin
 
 # compiler
 CC = g++
 
 # Compile options. Το -I<dir> λέει στον compiler να αναζητήσει εκεί include files
-CPPFLAGS = -g -Wall -Werror -lm
+CPPFLAGS = -g -Wall -Werror -lm -I$(INCLUDE)
 
 # Αρχεία .o
-OBJS = MySort.o RecordReader.o
+OBJS = $(BUILD)/MySort.o $(BUILD)/RecordReader.o
 
 # Το εκτελέσιμο πρόγραμμα
-EXEC = MySort
+EXEC = $(BIN)/MySort
 
 # Παράμετροι για δοκιμαστική εκτέλεση
-ARGS =  -i voters100000.bin -k 4 -e1 QuickSort -e2 MergeSort
+ARGS =  -i voters100000.bin -k 4 -e1 $(BIN)/QuickSort -e2 $(BIN)/MergeSort
 
-$(EXEC): $(OBJS) 
+# Default target
+all: $(EXEC) $(BIN)/QuickSort $(BIN)/MergeSort
+
+# Rules
+$(BUILD)/%.o: $(MODULES)/%.cpp | $(BUILD)
+	$(CC) $(CPPFLAGS) -c $< -o $@
+
+$(BUILD):
+	mkdir -p $(BUILD)
+
+$(BIN):
+	mkdir -p $(BIN)
+
+$(EXEC): $(OBJS) | $(BIN)
 	$(CC) $(OBJS) -o $(EXEC) $(CPPFLAGS)
-	g++ -o QuickSort -D ALG=1 Sort.cpp RecordReader.cpp Sorter.cpp
-	g++ -o MergeSort -D ALG=2 Sort.cpp RecordReader.cpp Sorter.cpp
 
-run: $(EXEC)
+$(BIN)/QuickSort: $(MODULES)/Sort.cpp $(MODULES)/RecordReader.cpp $(MODULES)/Sorter.cpp | $(BIN)
+	$(CC) -D ALG=1 $(CPPFLAGS) $^ -o $@
+
+$(BIN)/MergeSort: $(MODULES)/Sort.cpp $(MODULES)/RecordReader.cpp $(MODULES)/Sorter.cpp | $(BIN)
+	$(CC) -D ALG=2 $(CPPFLAGS) $^ -o $@
+
+run: all
 	./$(EXEC) $(ARGS)
 
 clean:
-	rm -f $(OBJS) $(EXEC) Quicksort MergeSort debug.txt
+	rm -f $(BUILD)/*.o $(BIN)/* debug.txt
 
 debug: $(EXEC)
 	valgrind ./$(EXEC) $(ARGS)
-	ipcs
+
+.PHONY: clean run debug all
