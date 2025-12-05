@@ -14,10 +14,11 @@ Sort.cpp: sorter excec(different depenting ALG define). Made it this way to avoi
 MySort.cpp: the main function, does the forking and load splitting, both for root and first layer childer(plitters/mergers)
 
 Tried to code clean, but no so familiar with linux syscalls, so sometimes I was not so cautious, though some functionallity
-could be moved to seperate classes so code could potentially be more sustainable. Nevermind this is not gonna be used for production anyway.
+could be moved to seperate classes so code could potentially be more sustainable.
 Used low level syscall printing just for final results.
 
 ## Makefile
 
 Added Dubug command to use valgrid
+
 Clean removes files
